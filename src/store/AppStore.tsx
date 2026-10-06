@@ -8,7 +8,7 @@ import type {
 import { loadAll, metaGet, metaSet, persist, wipeAll, type StoreName } from "../lib/db";
 import { materializeRecurring } from "../lib/finance";
 import { currentMonth, shiftMonth, todayISO } from "../lib/format";
-import { recolor, seedCategories, seedDemo } from "../lib/seed";
+import { recolor, seedCategories } from "../lib/seed";
 
 const EMPTY: AppData = {
   accounts: [], categories: [], cards: [], txs: [], payments: [],
@@ -26,13 +26,17 @@ function boot(): Promise<BootResult> {
     bootPromise = (async () => {
       let d = await loadAll();
       const seeded = await metaGet<boolean>("seeded");
-      if (!seeded) {
-        d = seedDemo();
-        for (const key of Object.keys(d) as (keyof AppData)[]) {
-          await persist(key as StoreName, d[key] as { id: string }[]);
-        }
+      const hadDemo = (await metaGet<boolean>("demo")) === true;
+      if (!seeded || hadDemo) {
+        // estado inicial limpo: zero dados financeiros, só nomes de categorias
+        const savedTheme = await metaGet<Theme>("theme");
+        await wipeAll();
+        d = { ...EMPTY, categories: seedCategories() };
+        await persist("categories", d.categories);
         await metaSet("seeded", true);
-        await metaSet("demo", true);
+        await metaSet("demo", false);
+        await metaSet("vt-colors", true);
+        if (savedTheme) await metaSet("theme", savedTheme);
       }
       if (d.categories.length === 0) {
         d = { ...d, categories: seedCategories() };
@@ -100,7 +104,6 @@ export interface StoreCtx {
   deleteRecurring: (id: string) => void;
   // backup
   importData: (d: AppData) => void;
-  loadDemo: () => void;
   wipe: () => void;
 }
 
@@ -234,12 +237,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const loadDemo = useCallback(() => {
-    const d = seedDemo();
-    importData(d).then(() => metaSet("demo", true));
-    setDemoMode(true);
-  }, [importData]);
-
   const wipe = useCallback(async () => {
     await wipeAll();
     await metaSet("seeded", true);
@@ -253,12 +250,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     saveAccount, deleteAccount, saveCategory, deleteCategory, saveCard, deleteCard,
     addTransactions, updateTransaction, deleteTransaction, payCard, deletePayment,
     saveBudget, deleteBudget, saveGoal, deleteGoal, addContrib,
-    saveRecurring, deleteRecurring, importData, loadDemo, wipe,
+    saveRecurring, deleteRecurring, importData, wipe,
   }), [
     data, loaded, month, theme, demoMode, saveAccount, deleteAccount, saveCategory,
     deleteCategory, saveCard, deleteCard, addTransactions, updateTransaction,
     deleteTransaction, payCard, deletePayment, saveBudget, deleteBudget, saveGoal,
-    deleteGoal, addContrib, saveRecurring, deleteRecurring, importData, loadDemo, wipe,
+    deleteGoal, addContrib, saveRecurring, deleteRecurring, importData, wipe,
     setTheme,
   ]);
 

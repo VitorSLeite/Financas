@@ -153,8 +153,8 @@ export function TransactionsPage({ onEdit, onNew }: { onEdit: (t: Transaction) =
       {groups.length === 0 && (
         <EmptyState
           icon="receipt"
-          title="Nenhum lançamento"
-          body="Toque no botão + para adicionar sua primeira transação do período."
+          title="Nenhum lançamento ainda"
+          body="Adicione sua primeira receita ou despesa para começar a acompanhar suas finanças."
           action={
             <button onClick={onNew} className="h-10 px-5 rounded-2xl bg-brand text-white text-[13.5px] font-bold flex items-center gap-1.5 active:scale-95 transition">
               <Plus size={15} strokeWidth={3} /> Adicionar

@@ -110,9 +110,38 @@ export function Dashboard({ go, onNew, onPayCard }: {
               <span>Previsão 30 dias <HiddenMoney v={cf.d30} hide={hide} className={cn("font-semibold ml-1", cf.d30 < 0 ? "text-down" : "text-ink")} /></span>
             )}
             <span>Investido <HiddenMoney v={invested} hide={hide} className="font-semibold text-ink ml-1" /></span>
+            <span>Faturas <HiddenMoney v={bills.reduce((s, b) => s + b.st.remaining, 0)} hide={hide} className="font-semibold text-ink ml-1" /></span>
+            <span>Compromissos <HiddenMoney v={safe.upcomingBills + safe.cardDue} hide={hide} className="font-semibold text-ink ml-1" /></span>
           </div>
         </div>
       </section>
+
+      {/* ===== primeiros passos (estado vazio) */}
+      {(data.accounts.length === 0 || data.txs.length === 0) && (
+        <section className="mt-4 rounded-2xl border border-dashed border-line bg-panel p-5">
+          <div className="text-[15px] font-semibold">Comece a organizar suas finanças</div>
+          <div className="text-[13px] text-muted mt-1 leading-relaxed">
+            {data.accounts.length === 0
+              ? "Nenhuma conta cadastrada. Crie sua primeira conta para começar a acompanhar seu saldo."
+              : "Nenhum lançamento ainda. Adicione sua primeira receita ou despesa para começar."}
+          </div>
+          <div className="mt-4 grid grid-cols-2 gap-2">
+            {[
+              { l: "Criar conta", done: data.accounts.length > 0, f: () => go("accounts") },
+              { l: "Adicionar cartão", done: data.cards.length > 0, f: () => go("cards") },
+              { l: "Primeiro lançamento", done: data.txs.length > 0, f: () => onNew() },
+              { l: "Criar meta", done: data.goals.length > 0, f: () => go("planning") },
+            ].map((s) => (
+              <button key={s.l} onClick={s.f} className={cn(
+                "h-11 rounded-xl text-[13px] font-semibold flex items-center justify-center gap-1.5 active:scale-[.98] transition",
+                s.done ? "bg-brand/10 text-brand" : "bg-raise",
+              )}>
+                {s.done ? "✓" : <Plus size={14} />} {s.l}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ===== ações */}
       <button
@@ -200,7 +229,7 @@ export function Dashboard({ go, onNew, onPayCard }: {
                 <div className="flex items-baseline gap-1">
                   <span className="text-[26px] font-extrabold tabular-nums leading-none">{health.score}</span>
                   <span className="text-[13px] text-muted">/ 100</span>
-                  <span className={cn("ml-2 text-[13px] font-semibold", health.score >= 60 ? "text-brand" : health.score >= 40 ? "text-warn" : "text-down")}>{health.grade}</span>
+                  <span className={cn("ml-2 text-[13px] font-semibold", health.score === 0 ? "text-muted" : health.score >= 60 ? "text-brand" : health.score >= 40 ? "text-warn" : "text-down")}>{health.grade}</span>
                 </div>
                 <div className="text-[12.5px] text-muted mt-1.5 leading-snug">{healthMessage(health.score)}</div>
               </div>
@@ -211,6 +240,14 @@ export function Dashboard({ go, onNew, onPayCard }: {
       </div>
 
       {/* ===== cartões */}
+      {bills.length === 0 && (
+        <Section title="Cartões de crédito">
+          <button onClick={() => go("cards")} className="w-full rounded-2xl bg-surface border border-line/70 p-5 text-left active:scale-[.99] transition">
+            <div className="text-[13.5px] font-semibold">Nenhum cartão cadastrado</div>
+            <div className="text-[12.5px] text-muted mt-1">Adicione um cartão para acompanhar faturas e limites.</div>
+          </button>
+        </Section>
+      )}
       {bills.length > 0 && (
         <Section title="Cartões de crédito" action="Ver todos" onAction={() => go("cards")}>
           <div className="grid sm:grid-cols-2 gap-3">

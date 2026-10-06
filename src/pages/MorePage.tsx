@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import {
   ArrowLeft, ChevronRight, FileSpreadsheet, FileText,
-  Moon, RefreshCcw, Sun, Trash2, Upload,
+  Moon, Sun, Trash2, Upload,
 } from "lucide-react";
 import { useStore } from "../store/AppStore";
 import { Card, Field, Seg, Sheet, IconBubble, Logo } from "../components/ui";
@@ -13,7 +13,7 @@ import { GROUP_LABELS } from "../lib/labels";
 import { cn } from "../utils/cn";
 
 export function MorePage({ go }: { go: (p: PageKey) => void }) {
-  const { data, theme, setTheme, importData, loadDemo, wipe, saveCategory, deleteCategory, demoMode } = useStore();
+  const { data, theme, setTheme, importData, wipe, saveCategory, deleteCategory } = useStore();
   const [view, setView] = useState<"menu" | "cats">("menu");
   const [showCatEdit, setShowCatEdit] = useState(false);
   const [editing, setEditing] = useState<Category | null>(null);
@@ -196,13 +196,7 @@ export function MorePage({ go }: { go: (p: PageKey) => void }) {
               <div className="text-[11px] text-muted font-medium">Substitui os dados atuais</div>
             </div>
           </button>
-          <button onClick={loadDemo} className="flex items-center gap-3 px-3.5 py-3 rounded-2xl active:bg-raise transition text-left">
-            <RefreshCcw size={17} className="text-warn shrink-0" />
-            <div>
-              <div className="text-[13.5px] font-bold">Restaurar exemplo</div>
-              <div className="text-[11px] text-muted font-medium">Recarrega dados de demonstração</div>
-            </div>
-          </button>
+
         </div>
         <input
           ref={fileRef} type="file" accept="application/json,.json" className="hidden"
@@ -232,7 +226,7 @@ export function MorePage({ go }: { go: (p: PageKey) => void }) {
         <div className="text-[13px] font-bold">VT Flow — Finanças Pessoais</div>
         <div className="text-[11.5px] text-muted font-medium mt-0.5">
           PWA offline · dados salvos localmente (IndexedDB) · BRL · DD/MM/AAAA
-          {demoMode && " · usando dados de demonstração"}
+
         </div>
       </div>
     </div>

@@ -364,7 +364,10 @@ export function safeToSpend(data: AppData): SafeToSpend {
   const perDay = Math.max(0, remaining) / Math.max(1, daysLeft);
 
   let reason: string | null = null;
-  if (remaining <= 0) {
+  const noData = data.txs.length === 0 && data.accounts.every((a) => a.initialBalance === 0);
+  if (noData) {
+    reason = "Adicione uma conta e seus lançamentos para calcular quanto você pode gastar.";
+  } else if (remaining <= 0) {
     const parts = [
       { v: upcomingBills, t: "As contas agendadas até o fim do mês" },
       { v: cardDue, t: "As faturas de cartão em aberto" },
@@ -419,6 +422,19 @@ export interface Health { score: number; grade: string; parts: HealthPart[]; ins
 
 export function financialHealth(data: AppData): Health {
   const cm = currentMonth();
+  if (data.txs.length === 0) {
+    return {
+      score: 0,
+      grade: "Sem dados",
+      parts: [
+        { key: "save", label: "Taxa de poupança", pts: 0, of: 40, detail: "—" },
+        { key: "emerg", label: "Reserva de emergência", pts: 0, of: 30, detail: "—" },
+        { key: "util", label: "Uso do limite", pts: 0, of: 15, detail: "—" },
+        { key: "budget", label: "Orçamentos no azul", pts: 0, of: 15, detail: "—" },
+      ],
+      insights: ["Adicione suas contas, receitas e despesas para calcular sua saúde financeira."],
+    };
+  }
   const months = [shiftMonth(cm, -2), shiftMonth(cm, -1), cm];
   let ti = 0, te = 0;
   for (const m of months) {

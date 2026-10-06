@@ -4,6 +4,7 @@ import { ScoreRing } from "./charts";
 import type { Health } from "../lib/finance";
 
 export function healthMessage(score: number) {
+  if (score === 0) return "Adicione seus lançamentos para gerar sua nota.";
   if (score >= 80) return "Seus gastos estão sob controle este mês.";
   if (score >= 60) return "Bom caminho — alguns ajustes podem melhorar sua nota.";
   if (score >= 40) return "Atenção a gastos e reserva de emergência.";

@@ -238,7 +238,7 @@ export function TransactionSheet({
                   {c.name}
                 </Chip>
               ))}
-              {data.cards.length === 0 && <span className="text-[13px] text-muted py-2">Cadastre um cartão na aba Cartões</span>}
+              {data.cards.length === 0 && <span className="text-[13px] text-muted py-2">Nenhum cartão cadastrado — adicione um em Cartões</span>}
             </div>
           </Field>
           <Field label="Parcelas">

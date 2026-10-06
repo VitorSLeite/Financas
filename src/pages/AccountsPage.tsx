@@ -70,7 +70,7 @@ export function AccountsPage({ onTransfer }: { onTransfer: (accountId: string) =
         </button>
       </div>
 
-      {visible.length === 0 && <EmptyState icon="landmark" title="Nenhuma conta" body="Adicione contas correntes, poupanças, carteiras e investimentos." />}
+      {visible.length === 0 && <EmptyState icon="landmark" title="Nenhuma conta cadastrada" body="Crie sua primeira conta para começar a acompanhar seu saldo." />}
 
       <div className="grid sm:grid-cols-2 gap-3">
         {visible.map((a) => {

@@ -193,7 +193,7 @@ export function PlanningPage() {
             </button>
           </div>
           {data.goals.length === 0 && (
-            <EmptyState icon="piggy" title="Sem metas" body="Crie objetivos como reserva de emergência, viagem ou carro e acompanhe o progresso." />
+            <EmptyState icon="piggy" title="Nenhuma meta ainda" body="Crie sua primeira meta para começar a planejar suas finanças." />
           )}
           <div className="grid sm:grid-cols-2 gap-3">
             {data.goals.map((g) => {
@@ -344,7 +344,7 @@ export function PlanningPage() {
           </div>
         </Field>
         <Field label="Limite mensal (R$)" className="mb-1">
-          <input value={bAmount} onChange={(e) => setBAmount(e.target.value)} inputMode="decimal" placeholder="1.000,00" className="input text-[18px] font-bold" />
+          <input value={bAmount} onChange={(e) => setBAmount(e.target.value)} inputMode="decimal" placeholder="0,00" className="input text-[18px] font-bold" />
         </Field>
       </Sheet>
 
@@ -368,7 +368,7 @@ export function PlanningPage() {
           <input value={gName} onChange={(e) => setGName(e.target.value)} placeholder="Ex.: Reserva de emergência, Viagem, Carro…" className="input" />
         </Field>
         <Field label="Valor objetivo (R$)">
-          <input value={gTarget} onChange={(e) => setGTarget(e.target.value)} inputMode="decimal" placeholder="10.000,00" className="input" />
+          <input value={gTarget} onChange={(e) => setGTarget(e.target.value)} inputMode="decimal" placeholder="0,00" className="input" />
         </Field>
         <Field label="Prazo (opcional)">
           <input type="date" value={gDeadline} onChange={(e) => setGDeadline(e.target.value)} className="input" />
@@ -402,9 +402,7 @@ export function PlanningPage() {
         }
       >
         <div className="flex gap-2 mb-4">
-          {[100, 500, 1000].map((v) => (
-            <Chip key={v} onClick={() => setCAmount(String(v).replace(".", ","))}>+ {fmtBRL(v)}</Chip>
-          ))}
+
         </div>
         <Field label="Valor (R$)" className="mb-1">
           <input value={cAmount} onChange={(e) => setCAmount(e.target.value)} inputMode="decimal" autoFocus className="input text-[20px] font-bold" placeholder="0,00" />

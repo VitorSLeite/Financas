@@ -133,7 +133,7 @@ export function CardsPage({
         </div>
 
         {data.cards.length === 0 && (
-          <EmptyState icon="creditCard" title="Nenhum cartão" body="Cadastre seus cartões para controlar faturas, limites e parcelas." />
+          <EmptyState icon="creditCard" title="Nenhum cartão cadastrado" body="Adicione um cartão de crédito para acompanhar faturas e limites." />
         )}
 
         <div className="grid sm:grid-cols-2 gap-3.5">
@@ -385,7 +385,7 @@ export function CardsPage({
           <input value={fName} onChange={(e) => setFName(e.target.value)} placeholder="Ex.: Nubank, Inter, XP…" className="input" />
         </Field>
         <Field label="Limite total (R$)">
-          <input value={fLimit} onChange={(e) => setFLimit(e.target.value)} inputMode="decimal" placeholder="5.000,00" className="input" />
+          <input value={fLimit} onChange={(e) => setFLimit(e.target.value)} inputMode="decimal" placeholder="0,00" className="input" />
         </Field>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Dia de fechamento">
