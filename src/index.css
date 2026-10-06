@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raise: var(--raise);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-up: var(--up);
+  --color-down: var(--down);
+  --color-warn: var(--warn);
+  --color-info: var(--info);
+  --color-accent: var(--accent);
+  --color-panel: var(--panel);
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+  --animate-fade-in: fade-in 0.2s ease both;
+}
+
+:root {
+  --bg: #f4f6fa;
+  --panel: #ffffff;
+  --surface: #ffffff;
+  --raise: #eef1f6;
+  --line: #e2e7ef;
+  --ink: #0b1220;
+  --muted: #5e6b82;
+  --brand: #00a88c;
+  --up: #00a88c;
+  --down: #e5485a;
+  --warn: #c98a12;
+  --info: #2f86e8;
+  --accent: #6e5ef0;
+}
+
+.dark {
+  --bg: #070b14;
+  --panel: #0d1424;
+  --surface: #111a2d;
+  --raise: #18233a;
+  --line: #1d2940;
+  --ink: #f2f5fa;
+  --muted: #8a97ad;
+  --brand: #00c9a7;
+  --up: #00c9a7;
+  --down: #ff5c6c;
+  --warn: #f5b94a;
+  --info: #4da3ff;
+  --accent: #8b7cff;
+}
+
+html {
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  overscroll-behavior-y: none;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--brand) 30%, transparent);
+}
+
+/* ---------- form controls ---------- */
+@layer components {
+  .input {
+    @apply h-[46px] w-full rounded-2xl border border-line bg-raise px-3.5 text-[14px] font-medium outline-none transition placeholder:text-muted/70 focus:border-brand focus:bg-surface;
+  }
+  select.input {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+      linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+  }
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.55;
+  cursor: pointer;
+}
+
+/* texto escuro sobre o teal primário (contraste) */
+.bg-brand.text-white { color: #04140f; }
+
+/* ---------- scrollbar ---------- */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 8px;
+  border: 3px solid var(--bg);
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---------- animations ---------- */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes sheet-in {
+  from { opacity: 0.4; transform: translateY(64px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
